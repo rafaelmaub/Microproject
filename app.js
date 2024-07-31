@@ -1,6 +1,10 @@
 const express = require("express");
 const fs = require("fs");
+const path = require('path');
 const app = express();
+const PORT = 3000; // 
+
+const data = require('./data/items.json');
 
 // Handle GET requests to the root path
 app.get('/', function(req, res) {
@@ -8,39 +12,56 @@ app.get('/', function(req, res) {
     res.sendFile(__dirname + '/public/index.html');
 });
 
+app.get('/index', function(req, res) {
+
+    res.sendFile(__dirname + '/public/index.html');
+});
+
+app.get('/about', function(req, res) {
+
+    res.sendFile(__dirname + '/public/about.html');
+});
+
 app.get('/api', function(req, res) {
 
     res.sendFile(__dirname + '/public/api.html');
 });
 
-const read = async () => {
-    console.log("reading")
-    const rawdata = fs.readFile("data/items.json");
-    let equipment = JSON.parse(rawdata);
-    console.log(equipment);
-  }
+app.get('/contact', function(req, res) {
 
-app.get('/retrieveData', function(req, res) {
-    console.log("Received a request from test...!!!");
-
-
-    fs.readFile(__dirname + '/data/items.json', 'utf8', (err, data) => {
-        if (err) 
-        {
-            console.error(err);
-            return;
-        }
-        let equipment = JSON.parse(data);
-        console.log(equipment);
-    });
-    res.sendFile(__dirname + '/public/api.html');
-    
+    res.sendFile(__dirname + '/public/contact.html');
 });
 
+app.get('/crud', function(req, res) {
 
-app.listen(3000, function () {
-    console.log("Server is running on localhost3000");
-  });
+    res.sendFile(__dirname + '/public/crud.html');
+});
 
+app.get('/items',(req, res)=>{
+    res.json(data.items);
+});
 
+// CRUID
+// http://localhost:3000/create
+// http://localhost:3000/update
+// http://localhost:3000/delete
+// http://localhost:3000/read
 
+    app.get('/read', (req, res) => {
+        res.send('Practising .get() HTTP method for "Read/Retrieve"');
+    });
+    
+    app.post("/create", (req, res) => {
+        res.send('Practising .post() HTTP method for "Create"');
+    });
+    
+    app.put("/update", (req, res) => {
+        res.send('Practising .put() HTTP method for "Update"');
+    });
+    
+    app.delete("/delete", (req, res) => {
+        res.send('Practising .delete() HTTP method for "Delete"');
+    });   
+app.listen(PORT, ()=>{
+    console.log(`Example app listening on http://localhost:${PORT}`);
+});
