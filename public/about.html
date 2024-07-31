@@ -3,27 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About</title>
+    <title>Items</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>About Us</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="api.html">Services</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
-        </nav>
+        <div class="container">
+            <h1 class="display-4">Our Items</h1>
+            <nav class="navbar navbar-expand-lg custom-navbar">
+                <a class="navbar-brand" href="#">Navbar</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon">&#9776;</span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index">Home</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="about">About <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="api">Services</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="contact">Contact</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="crud">CRUD</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
     </header>
-    <main>
-        <h2>About Page</h2>
-        <p>Learn more about our company.</p>
+    <main class="container mt-5">
+        <h2 class="mb-4">Items Page</h2>
+        <p>Click the button below to fetch and display items.</p>
+        <button id="fetchData" class="btn btn-primary">Fetch Items</button>
+        <div id="dataContainer" class="mt-4"></div>
     </main>
-    <footer>
+    <footer class="text-center py-3 mt-5">
         <p>&copy; 2024 Your Company</p>
     </footer>
+
+    <!-- Optional JavaScript; choose one of the two! -->
+    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <!-- Fetch and display data -->
+    <script>
+        document.getElementById('fetchData').addEventListener('click', function() {
+            fetch('/items')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Fetched data:', data); // Log data for inspection
+    
+                    if (!Array.isArray(data)) {
+                        throw new Error('Data is not an array');
+                    }
+    
+                    let html = `
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Brand</th>
+                                    <th>Price</th>
+                                    <th>In Stock</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+                    
+                    data.forEach((item, index) => {
+                        html += `
+                            <tr>
+                                <td>${item.id}</td>
+                                <td>${item.name}</td>
+                                <td>${item.brand}</td>
+                                <td>${item.price}</td>
+                                <td>${item.inStock ? 'Yes' : 'No'}</td>
+                            </tr>
+                        `;
+                    });
+                    
+                    html += `
+                            </tbody>
+                        </table>
+                    `;
+                    
+                    document.getElementById('dataContainer').innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    document.getElementById('dataContainer').innerHTML = `<p>Error fetching data. Please check the console for details.</p>`;
+                });
+        });
+    </script>
+    
 </body>
 </html>
